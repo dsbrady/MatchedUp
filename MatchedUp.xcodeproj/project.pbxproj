@@ -84,13 +84,13 @@
 		8831EC1B19E33FA800C9DDDE /* MatchedUp */ = {
 			isa = PBXGroup;
 			children = (
+				8831EC2919E33FA800C9DDDE /* Main.storyboard */,
 				8831EC2019E33FA800C9DDDE /* AppDelegate.h */,
 				8831EC2119E33FA800C9DDDE /* AppDelegate.m */,
 				8831EC2319E33FA800C9DDDE /* FirstViewController.h */,
 				8831EC2419E33FA800C9DDDE /* FirstViewController.m */,
 				8831EC2619E33FA800C9DDDE /* SecondViewController.h */,
 				8831EC2719E33FA800C9DDDE /* SecondViewController.m */,
-				8831EC2919E33FA800C9DDDE /* Main.storyboard */,
 				8831EC2C19E33FA800C9DDDE /* Images.xcassets */,
 				8831EC2E19E33FA800C9DDDE /* LaunchScreen.xib */,
 				8831EC1C19E33FA800C9DDDE /* Supporting Files */,
@@ -350,6 +350,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = MatchedUp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -360,6 +361,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = MatchedUp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
