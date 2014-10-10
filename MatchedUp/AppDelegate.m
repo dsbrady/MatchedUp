@@ -7,6 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#import <Parse/Parse.h>
+#import <FacebookSDK/FacebookSDK.h>
+#import <ParseFacebookUtils/PFFacebookUtils.h>
 
 @interface AppDelegate ()
 
@@ -17,6 +20,24 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	// Override point for customization after application launch.
+	[Parse setApplicationId:@"W6LXysVNwh78mqqSdMah4la72lgzODAB1ZAwguZt" clientKey:@"g8sb7BQL0GY8HFSfMoGHL7tLaRkpePBrAAPI8LPE"];
+
+	// Register for Push Notitications, if running iOS 8
+	if ([application respondsToSelector:@selector(registerUserNotificationSettings:)])
+	{
+		UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert | UIUserNotificationTypeBadge |UIUserNotificationTypeSound);
+  UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
+																		   categories:nil];
+		[application registerUserNotificationSettings:settings];
+		[application registerForRemoteNotifications];
+	}
+	else
+	{
+		// Register for Push Notifications before iOS 8
+		[application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
+	}
+
+	[PFFacebookUtils initializeFacebook];
 	return YES;
 }
 
@@ -40,6 +61,29 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
 	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - Parse methods
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+	// Store the deviceToken in the current installation and save it to Parse.
+	PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+	[currentInstallation setDeviceTokenFromData:deviceToken];
+	[currentInstallation saveInBackground];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+	[PFPush handlePush:userInfo];
+}
+
+#pragma mark - Facebook methods
+
+- (BOOL)application:(UIApplication *)application
+			openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+		 annotation:(id)annotation {
+	// attempt to extract a token from the url
+	return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
 }
 
 @end
