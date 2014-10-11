@@ -11,6 +11,9 @@
 @implementation Constants
 
 #pragma mark - User Class
+
+NSString *const kSMTUserTagLineKey						= @"tagLine";
+
 NSString *const kSMTUserProfileKey						= @"profile";
 NSString *const kSMTUserProfileNameKey					= @"name";
 NSString *const kSMTUserProfileFirstNameKey				= @"firstName";
@@ -26,5 +29,14 @@ NSString *const kSMTUserProfileAgeKey 					= @"age";
 NSString *const kSMTPhotoClassKey						= @"Photo";
 NSString *const kSMTPhotoUserKey						= @"user";
 NSString *const kSMTPhotoPictureKey						= @"image";
+
+#pragma mark - Activity Class
+NSString *const kSMTActivityClassKey					= @"Activity";
+NSString *const kSMTActivityTypeKey						= @"type";
+NSString *const kSMTActivityFromUserKey					= @"fromUser";
+NSString *const kSMTActivityToUserKey					= @"toUser";
+NSString *const kSMTActivityPhotoKey					= @"photo";
+NSString *const kSMTActivityTypeLikeKey					= @"like";
+NSString *const kSMTActivityTypeDislikeKey				= @"dislike";
 
 @end

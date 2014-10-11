@@ -11,6 +11,9 @@
 @interface Constants : NSObject
 
 #pragma mark - User Class
+
+extern NSString *const kSMTUserTagLineKey;
+
 extern NSString *const kSMTUserProfileKey;
 extern NSString *const kSMTUserProfileNameKey;
 extern NSString *const kSMTUserProfileFirstNameKey;
@@ -26,5 +29,15 @@ extern NSString *const kSMTUserProfileAgeKey;
 extern NSString *const kSMTPhotoClassKey;
 extern NSString *const kSMTPhotoUserKey;
 extern NSString *const kSMTPhotoPictureKey;
+
+#pragma mark - Activity Class
+extern NSString *const kSMTActivityClassKey;
+extern NSString *const kSMTActivityTypeKey;
+extern NSString *const kSMTActivityFromUserKey;
+extern NSString *const kSMTActivityToUserKey;
+extern NSString *const kSMTActivityPhotoKey;
+extern NSString *const kSMTActivityTypeLikeKey;
+extern NSString *const kSMTActivityTypeDislikeKey;
+
 
 @end

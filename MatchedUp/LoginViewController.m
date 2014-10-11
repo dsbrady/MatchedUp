@@ -132,7 +132,7 @@
 				[formatter setDateStyle:NSDateFormatterShortStyle];
 				NSDate *birthday = [formatter dateFromString:userDictionary[@"birthday"]];
 				NSTimeInterval seconds = [birthday timeIntervalSinceNow];
-				int age = seconds / 31536000;
+				int age = (seconds * -1) / 31536000;
 				userProfile[kSMTUserProfileAgeKey] = @(age);
 			}
 			if (userDictionary[@"interested_in"])
