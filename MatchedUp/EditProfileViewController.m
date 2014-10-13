@@ -7,6 +7,11 @@
 //
 
 #import "EditProfileViewController.h"
+#import "Constants.h"
+#import <FacebookSDK/FacebookSDK.h>
+#import <PFFile.h>
+#import <PFQuery.h>
+
 
 @interface EditProfileViewController ()
 
@@ -22,6 +27,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+
+	PFQuery *query = [PFQuery queryWithClassName:kSMTPhotoClassKey];
+	[query whereKey:kSMTPhotoUserKey equalTo:[PFUser currentUser]];
+	[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+		if ([objects count] > 0)
+		{
+			PFObject *photo = objects[0];
+			PFFile *pictureFile = photo[kSMTPhotoPictureKey];
+			[pictureFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+				self.profilePictureImageView.image = [UIImage imageWithData:data];
+			}];
+		}
+	}];
+
+	self.tagLineTextView.text = [[PFUser currentUser] objectForKey:kSMTUserTagLineKey];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -41,8 +61,11 @@
 
 #pragma mark - IBActions
 
-- (IBAction)saveBarButtonItemPressed:(UIBarButtonItem *)sender {
+- (IBAction)saveBarButtonItemPressed:(UIBarButtonItem *)sender
+{
+	[[PFUser currentUser] setObject:self.tagLineTextView.text forKey:kSMTUserTagLineKey];
+	[[PFUser currentUser] saveInBackground];
+	[self.navigationController popViewControllerAnimated:YES];
 }
-
 
 @end

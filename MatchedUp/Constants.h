@@ -39,5 +39,11 @@ extern NSString *const kSMTActivityPhotoKey;
 extern NSString *const kSMTActivityTypeLikeKey;
 extern NSString *const kSMTActivityTypeDislikeKey;
 
+#pragma mark - Settings
+extern NSString *const kSMTMenEnabledKey;
+extern NSString *const kSMTWomenEnabledKey;
+extern NSString *const kSMTSinglesEnabledKey;
+extern NSString *const kSMTAgeMaxKey;
+
 
 @end

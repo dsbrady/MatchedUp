@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <ParseFacebookUtils/PFFacebookUtils.h>
 
 @interface ProfileViewController : UIViewController
+
+@property (strong, nonatomic) PFObject *photo;
 
 @end

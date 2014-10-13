@@ -17,6 +17,7 @@
 
 @implementation AppDelegate
 
+// TODO:  figure out why JSQ messages sounds don't play
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	// Override point for customization after application launch.

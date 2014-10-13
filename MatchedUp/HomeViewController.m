@@ -8,12 +8,14 @@
 
 #import "HomeViewController.h"
 #import "Constants.h"
+#import "TestUser.h"
+#import "MatchViewController.h"
+#import "ProfileViewController.h"
 #import <FacebookSDK/FacebookSDK.h>
 #import <PFQuery.h>
 #import <PFFile.h>
 
-
-@interface HomeViewController ()
+@interface HomeViewController () <MatchViewControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *chatBarButtonItem;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *settingsBarButtonItem;
@@ -41,6 +43,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
+//	[TestUser saveTestUserToParse];
+
 	// We don't want users to be able to push the buttons before the pictures download
 	self.likeButton.enabled = NO;
 	self.dislikeButton.enabled = NO;
@@ -50,6 +54,7 @@
 
 	// Query to get the other users
 	PFQuery *query = [PFQuery queryWithClassName:kSMTPhotoClassKey];
+	[query whereKey:kSMTPhotoUserKey notEqualTo:[PFUser currentUser]];
 	[query includeKey:kSMTPhotoUserKey];
 	[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
 		if (!error)
@@ -71,21 +76,31 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+
+	if ([segue.identifier isEqualToString:@"homeToProfileSegue"] )
+	{
+		ProfileViewController *profileVC = segue.destinationViewController;
+		profileVC.photo = self.photo;
+	}
+	else if ([segue.identifier isEqualToString:@"homeToMatchSegue"])
+	{
+		MatchViewController *matchVC = segue.destinationViewController;
+		matchVC.matchedUserImage = self.photoImageView.image;
+		matchVC.delegate = self;
+	}
 }
-*/
 
 #pragma mark - IBActions
 
 - (IBAction)chatBarButtonItemPressed:(UIBarButtonItem *)sender
 {
-
+    [self performSegueWithIdentifier:@"homeToMatchesSegue" sender:nil];
 }
 
 - (IBAction)settingsBarButtonItemPressed:(UIBarButtonItem *)sender
@@ -105,7 +120,7 @@
 
 - (IBAction)infoButtonPressed:(UIButton *)sender
 {
-
+	[self performSegueWithIdentifier:@"homeToProfileSegue" sender:nil];
 }
 
 #pragma mark - Helper methods
@@ -171,6 +186,7 @@
 				// TODO: refactor this to only enable the button if the current like/dislike is NO respectively
 				self.likeButton.enabled = YES;
 				self.dislikeButton.enabled = YES;
+				self.infoButton.enabled = YES;
 			}
 		}];
 	}
@@ -221,43 +237,10 @@
 		self.isLikedByCurrentUser = isLiked;
 		self.isDislikedByCurrentUser = !isLiked;
 		[self.activities addObject:likeActivity];
+		[self checkForPhotoUserLikes];
 		[self setupNextPhoto];
 	}];
 }
-
-/* TODO: remove
--(void)saveLike
-{
-	PFObject *likeActivity = [PFObject objectWithClassName:@"Activity"];
-	[likeActivity setObject:@"like" forKey:@"type"];
-	[likeActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
-	[likeActivity setObject:[self.photo objectForKey:@"user"] forKey:@"toUser"];
-	[likeActivity setObject:self.photo forKey:@"photo"];
-
-	[likeActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-		self.isLikedByCurrentUser = YES;
-		self.isDislikedByCurrentUser = NO;
-		[self.activities addObject:likeActivity];
-		[self setupNextPhoto];
-	}];
-}
-
--(void)saveDislike
-{
-	PFObject *dislikeActivity = [PFObject objectWithClassName:@"Activity"];
-	[dislikeActivity setObject:@"dislike" forKey:@"type"];
-	[dislikeActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
-	[dislikeActivity setObject:[self.photo objectForKey:@"user"] forKey:@"toUser"];
-	[dislikeActivity setObject:self.photo forKey:@"photo"];
-
-	[dislikeActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-		self.isLikedByCurrentUser = NO;
-		self.isDislikedByCurrentUser = YES;
-		[self.activities addObject:dislikeActivity];
-		[self setupNextPhoto];
-	}];
-}
-*/
 
 -(void)checkLikeStatus:(BOOL)isLiked
 {
@@ -295,50 +278,59 @@
 	}
 }
 
-/* TODO: remove
--(void)checkLike
+-(void)checkForPhotoUserLikes
 {
-	if (self.isLikedByCurrentUser)
-	{
-		[self setupNextPhoto];
-		return;
-	}
-	else if (self.isDislikedByCurrentUser)
-	{
-		for (PFObject *activity in self.activities)
+	PFQuery *query = [PFQuery queryWithClassName:kSMTActivityClassKey];
+	[query whereKey:kSMTActivityFromUserKey equalTo:self.photo[kSMTPhotoUserKey]];
+	[query whereKey:kSMTActivityToUserKey equalTo:[PFUser currentUser]];
+	[query whereKey:kSMTActivityTypeKey equalTo:kSMTActivityTypeLikeKey];
+	[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+		if (!error && [objects count] > 0)
 		{
-			[activity deleteInBackground];
+			// Create chatroom
+			[self createChatroom];
 		}
-		[self.activities removeLastObject];
-		[self saveLikeStatus:YES];
-	}
-	else
-	{
-		[self saveLikeStatus:YES];
-	}
+	}];
 }
 
--(void)checkDislike
+-(void)createChatroom
 {
-	if (self.isDislikedByCurrentUser)
-	{
-		[self setupNextPhoto];
-		return;
-	}
-	else if (self.isLikedByCurrentUser)
-	{
-		for (PFObject *activity in self.activities)
+	PFQuery *queryForChatroom = [PFQuery queryWithClassName:@"ChatRoom"];
+	[queryForChatroom whereKey:@"user1" equalTo:[PFUser currentUser]];
+	[queryForChatroom whereKey:@"user2" equalTo:self.photo[kSMTPhotoUserKey]];
+
+	PFQuery *queryForChatroomInverse = [PFQuery queryWithClassName:@"ChatRoom"];
+	[queryForChatroomInverse whereKey:@"user1" equalTo:self.photo[kSMTPhotoUserKey]];
+	[queryForChatroomInverse whereKey:@"user2" equalTo:[PFUser currentUser]];
+
+	PFQuery *allChatroomQuery = [PFQuery orQueryWithSubqueries:@[queryForChatroom,queryForChatroomInverse]];
+	[allChatroomQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+		// If there aren't any chatrooms yet, create a new room
+		if ([objects count] == 0)
 		{
-			[activity deleteInBackground];
+			PFObject *chatroom = [PFObject objectWithClassName:@"ChatRoom"];
+			[chatroom setObject:[PFUser currentUser] forKey:@"user1"];
+			[chatroom setObject:self.photo[kSMTPhotoUserKey] forKey:@"user2"];
+
+			[chatroom saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+				[self performSegueWithIdentifier:@"homeToMatchSegue" sender:nil];
+			}];
 		}
-		[self.activities removeLastObject];
-		[self saveLikeStatus:NO];
-	}
-	else
-	{
-		[self saveLikeStatus:NO];
-	}
+		else
+		{
+
+		}
+	}];
+
 }
-*/
+
+#pragma mark - <MatchViewControllerDelegate>
+
+-(void)presentMatchesViewController
+{
+	[self dismissViewControllerAnimated:NO completion:^{
+		[self performSegueWithIdentifier:@"homeToMatchesSegue" sender:nil];
+	}];
+}
 
 @end

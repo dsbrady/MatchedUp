@@ -7,6 +7,8 @@
 //
 
 #import "ProfileViewController.h"
+#import "Constants.h"
+#import <PFFile.h>
 
 @interface ProfileViewController ()
 
@@ -16,7 +18,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *statusLabel;
 @property (strong, nonatomic) IBOutlet UILabel *tagLineLabel;
 
-
 @end
 
 @implementation ProfileViewController
@@ -24,6 +25,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+
+	PFFile *pictureFile = self.photo[kSMTPhotoPictureKey];
+	[pictureFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+		self.profilePictureImageView.image = [UIImage imageWithData:data];
+	}];
+
+	PFUser *user = self.photo[kSMTPhotoUserKey];
+	self.locationLabel.text = user[kSMTUserProfileKey][kSMTUserProfileLocationKey];
+	self.ageLabel.text = [NSString stringWithFormat:@"%@",user[kSMTUserProfileKey][kSMTUserProfileAgeKey]];
+	self.statusLabel.text = user[kSMTUserProfileKey][kSMTUserProfileRelationshipStatusKey];
+	self.tagLineLabel.text = user[kSMTUserTagLineKey];
 }
 
 - (void)didReceiveMemoryWarning {
