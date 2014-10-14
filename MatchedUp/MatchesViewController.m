@@ -112,8 +112,8 @@
 	}
 
 	cell.textLabel.text = likedUser[kSMTUserProfileKey][kSMTUserProfileFirstNameKey];
+	cell.detailTextLabel.text = chatRoom[@"createdAt"];
 
-	// Cell.imageView.image = place holder image
 	cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
 
 	PFQuery *photoQuery = [[PFQuery alloc] initWithClassName:@"Photo"];

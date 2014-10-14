@@ -45,5 +45,20 @@ extern NSString *const kSMTWomenEnabledKey;
 extern NSString *const kSMTSinglesEnabledKey;
 extern NSString *const kSMTAgeMaxKey;
 
+#pragma mark - ChatRoom
+extern NSString *const kSMTChatRoomClassKey;
+extern NSString *const kSMTChatRoomUser1Key;
+extern NSString *const kSMTChatRoomUser2Key;
+
+#pragma mark - Chat
+extern NSString *const kSMTChatClassKey;
+extern NSString *const kSMTChatChatRoomKey;
+extern NSString *const kSMTChatFromUserKey;
+extern NSString *const kSMTChatToUserKey;
+extern NSString *const kSMTChatTextKey;
+
+#pragma mark - Mixpanel
+extern NSString *const kSMTMixpanelToken;
+
 
 @end

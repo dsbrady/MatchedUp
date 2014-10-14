@@ -5,6 +5,7 @@ PODS:
   - JSMessagesViewController (3.4.4):
     - JSQSystemSoundPlayer
   - JSQSystemSoundPlayer (2.0.0)
+  - Mixpanel (2.5.4)
   - Parse (1.4.1):
     - Bolts (~> 1.1.2)
   - ParseFacebookUtils (1.4.1):
@@ -14,6 +15,7 @@ PODS:
 DEPENDENCIES:
   - Facebook-iOS-SDK (~> 3.19)
   - JSMessagesViewController (~> 3.4.3)
+  - Mixpanel
   - Parse
   - ParseFacebookUtils
 
@@ -22,6 +24,7 @@ SPEC CHECKSUMS:
   Facebook-iOS-SDK: cb7d74759d0b1ba546e6e6f1dde407b0d4e448d6
   JSMessagesViewController: 7a3f3b5bb43044180e05625b32f164c73062bd61
   JSQSystemSoundPlayer: c98443b1cbb3b45db09d0d3d6c2355cf78294981
+  Mixpanel: 87167a0b0a74f11f0ee3787f291357494730617c
   Parse: db1a09c832b7509edcc88a65dc07229f5e578c73
   ParseFacebookUtils: 625da00d0f36a34e25ebae7f543385a0f19ccf1e
 

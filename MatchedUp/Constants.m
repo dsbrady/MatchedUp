@@ -45,4 +45,19 @@ NSString *const kSMTWomenEnabledKey						= @"women";
 NSString *const kSMTSinglesEnabledKey					= @"single";
 NSString *const kSMTAgeMaxKey							= @"ageMax";
 
+#pragma mark - ChatRoom
+NSString *const kSMTChatRoomClassKey					= @"ChatRoom";
+NSString *const kSMTChatRoomUser1Key					= @"user1";
+NSString *const kSMTChatRoomUser2Key					= @"user2";
+
+#pragma mark - Chat
+NSString *const kSMTChatClassKey						= @"Chat";
+NSString *const kSMTChatChatRoomKey						= @"chatroom";
+NSString *const kSMTChatFromUserKey						= @"fromUser";
+NSString *const kSMTChatToUserKey						= @"toUser";
+NSString *const kSMTChatTextKey							= @"text";
+
+#pragma mark - Mixpanel
+NSString *const kSMTMixpanelToken						= @"e53239a2fe114386a58faccc1b63330c";
+
 @end

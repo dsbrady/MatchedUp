@@ -7,8 +7,10 @@
 //
 
 #import "AppDelegate.h"
+#import "Constants.h"
 #import <Parse/Parse.h>
 #import <FacebookSDK/FacebookSDK.h>
+#import <Mixpanel.h>
 #import <ParseFacebookUtils/PFFacebookUtils.h>
 
 @interface AppDelegate ()
@@ -39,6 +41,16 @@
 	}
 
 	[PFFacebookUtils initializeFacebook];
+
+	[Mixpanel sharedInstanceWithToken:kSMTMixpanelToken];
+
+	NSString *defaultPrefsFile = [[NSBundle mainBundle] pathForResource:@"defaultPreferences" ofType:@"plist"];
+	NSDictionary *defaultPreferences = [NSDictionary dictionaryWithContentsOfFile:defaultPrefsFile];
+	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultPreferences];
+
+	[[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];
+	[[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:12/255.0 green:158/255.0 blue:255/255.0 alpha:1.0], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0]}];
+
 	return YES;
 }
 
